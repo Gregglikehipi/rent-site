@@ -7,9 +7,26 @@ from sqlalchemy.orm.base import Mapped
 Base = declarative_base()
 metadata = Base.metadata
 
-engine = create_engine('sqlite:///rent_site.db')
 
-Session = sessionmaker(bind=engine)
+class DatabaseHelper:
+    def __init__(self, url: str, echo: bool) -> None:
+        self.engine = create_engine(url=url, echo=echo)
+        self.session_make = sessionmaker(
+            bind=self.engine
+        )
+
+    def get_db(self):
+        with self.session_make() as session:
+            try:
+                yield session  # Provide the session to the caller
+                session.commit()  # Commit if everything goes well
+            except Exception as e:
+                session.rollback()  # Rollback if an exception occurs
+                raise e
+
+
+db_helper = DatabaseHelper(url="sqlite:///reports.db", echo=False)
+
 
 class Category(Base):
     __tablename__ = 'category'
@@ -23,11 +40,12 @@ class Users(Base):
 
     user_id = mapped_column(Integer, primary_key=True)
     fio = mapped_column(Text)
-    adress = mapped_column(Text)
+    address = mapped_column(Text)
     mail = mapped_column(Text)
     phone_number = mapped_column(Text)
-    pass_ = mapped_column('pass', Text)
-    raiting = mapped_column(Float)
+    password = mapped_column('pass', Text)
+    rating = mapped_column(Float)
+    uuid = mapped_column(Text)
 
     rent: Mapped[List['Rent']] = relationship('Rent', uselist=True, back_populates='user')
     chat: Mapped[List['Chat']] = relationship('Chat', uselist=True, back_populates='user')

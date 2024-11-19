@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <div>
+        {% for rent in rents %}
+        <div>
+            <img src="static/photo/{{ rent.photo_id }}.png" alt="Italian Trulli" style="width:500px;height:500px;" >
+            <b>{{rent.name}}</b>
+            <i>{{rent.price}}</i>
+        </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
