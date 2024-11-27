@@ -1,0 +1,35 @@
+.layout {
+    font-family: Arial, sans-serif;
+}
+
+.header {
+    background-color: #333;
+    padding: 10px;
+    color: white;
+    text-align: center;
+}
+
+.nav {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 10px;
+}
+
+.nav a {
+    color: white;
+    font-size: 16px;
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    background-color: #444;
+}
+
+.nav a:hover {
+    background-color: #555;
+}
+
+.content {
+    padding: 20px;
+    background-color: #f4f4f4;
+}
