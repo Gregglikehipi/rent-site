@@ -3,29 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="static/css/font.css">
+    <link rel="stylesheet" type="text/css" href="static/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="static/css/login_registersssss.css">
 </head>
 <body>
+<div class="main-section">
     <h2>Регистрация</h2>
-
-    <form action="/login" method="post">
+    <div>
+    <form action="/register" method="post">
         <div>
             <label><b>ФИО</b></label>
-            <input type="text" name="fio" placeholder="Введите ФИО">
+            <input type="text" name="fio">
 
             <label><b>Ваш адрес</b></label>
-            <input type="text" name="address" placeholder="Введите адрес">
+            <input type="text" name="address">
 
             <label><b>Номер телефона</b></label>
-            <input type="text" name="phone" placeholder="Введите номер">
+            <input type="text" name="phone">
+
+            <label><b>Номер студенческого</b></label>
+            <input type="text" name="student_id">
+
+            <label><b>Телеграмм</b></label>
+            <input type="text" name="telegram">
 
             <label><b>Почта</b></label>
-            <input type="text" name="mail" placeholder="Введите почту">
+            <input type="text" name="mail">
 
             <label><b>Пароль</b></label>
-            <input type="password" name="password" placeholder="Введите пароль">
+            <input type="password" name="password">
 
             <button type="submit">Зарегистрироваться</button>
         </div>
+        <a href="/" class="button-href">Назад</a>
     </form>
+    </div>
+</div>
 </body>
 </html>

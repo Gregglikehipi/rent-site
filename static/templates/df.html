@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        body {
+      margin: 0; /* Remove default margin */
+      display: flex; /* Use flexbox layout */
+      flex-direction: column; /* Stack children vertically */
+      min-height: 100vh; /* Make the body take full viewport height */
+    }
+
+    header, footer {
+      background-color: lightgray;
+      padding: 10px;
+    }
+
+    .main {
+      flex-grow: 1; /* Take all remaining free space */
+      background-color: lightblue; /* Optional: for visual reference */
+    }
+    </style>
+</head>
+<body>
+  <header>Header</header>
+  <div class="main">Main Content</div>
+  <footer>Footer</footer>
+</body>
+</html>

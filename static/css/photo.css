@@ -1,0 +1,10 @@
+.image-border
+{
+    border-style: solid;
+}
+
+.image
+{
+    width:400px;
+    height:400px;
+}

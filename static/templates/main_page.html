@@ -3,16 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="static/css/font.css">
+    <link rel="stylesheet" type="text/css" href="static/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="static/css/header.css">
+    <link rel="stylesheet" type="text/css" href="static/css/main_pagessss.css">
 </head>
 <body>
-    <div>
-        {% for rent in rents %}
-        <div>
-            <img src="static/photo/{{ rent.photo_id }}.png" alt="Italian Trulli" style="width:500px;height:500px;" >
-            <b>{{rent.name}}</b>
-            <i>{{rent.price}}</i>
+    <div class="section-start-top">
+        <div class="section-start-top-brand">
+            <a href="/" class="section-start-top-brand__name">RentSpace</a>
         </div>
-        {% endfor %}
+        <div class="section-start-top-options">
+            <div class="section-start-top-options-pages">
+                <a href="/rentcreate" class="section-start-top-options-pages__text">Создать карточку аренды</a>
+            </div>
+            <div class="section-start-top-options-login">
+                {% if flag == 1 %}
+                  <a href="/logout" class="section-start-top-options-pages__text">Выход</a>
+                  <a href="/user" class="section-start-top-options-login__text">Личный кабинет</a>
+                {% else %}
+                  <a href="/login" class="section-start-top-options-pages__text">Вход</a>
+                  <a href="/register" class="section-start-top-options-pages__text">Регистрация</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="main_part">
+        <h1>Каталог</h1>
+        <div class="container">
+            {% for rent in rents %}
+            <div class="box">
+              <div class="image-border">
+                <img src="static/photo/{{ rent.rent_id }}.png" class="image">
+              </div>
+              <b>{{rent.name}}</b>
+              <i>{{rent.price}}</i>
+              <a href="/rent/{{rent.rent_id}}">Посмотреть объявление</a>
+            </div>
+            {% endfor %}
+        </div>
     </div>
 </body>
 </html>

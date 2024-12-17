@@ -5,8 +5,7 @@ from sqlalchemy.orm import Session
 
 from logic import check_token
 
-from db import Database
-from fastapi import FastAPI, Request, Depends, status, Form
+from fastapi import FastAPI, Request, Depends, status, Form, File, UploadFile, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse, RedirectResponse
@@ -53,8 +52,11 @@ def user_get(request: Request,
              session: Annotated[Session, Depends(db_helper.get_db)]):
     user = check_token(session, request.cookies.get("token"))
     if user is None:
-        return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
-    return templates.TemplateResponse("user.html", {"request": request, "user": user})
+        return RedirectResponse(url="/login", status_code=status.HTTP_303_SEE_OTHER)
+    flag = 1
+    if user is None:
+        flag = 0
+    return templates.TemplateResponse("user.html", {"request": request, "user": user, "flag": flag})
 
 
 @app.post("/user")
@@ -81,11 +83,19 @@ def login_post(request: Request,
     if user is not None:
         return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
     user = read_user_by_mail_password(session, mail, password)
+    if user is None:
+        return RedirectResponse(url="/login", status_code=status.HTTP_303_SEE_OTHER)
     token = user.uuid
-    response = RedirectResponse(url="/main", status_code=status.HTTP_303_SEE_OTHER)
+    response = RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
     response.set_cookie(key="token", value=token, httponly=True, secure=True)
     return response
 
+@app.get("/logout")
+def logout(request: Request,
+          session: Annotated[Session, Depends(db_helper.get_db)]):
+    response = RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
+    response.delete_cookie("token")
+    return response
 
 @app.get("/register")
 def register_get(request: Request,
@@ -101,32 +111,83 @@ def register_post(request: Request,
                   session: Annotated[Session, Depends(db_helper.get_db)],
                   fio: str = Form(...), address: str = Form(...),
                   phone: str = Form(...), mail: str = Form(...),
-                  password: str = Form(...)):
+                  password: str = Form(...), telegram: str = Form(...),
+                  student_id: str = Form(...)):
     user = check_token(session, request.cookies.get("token"))
     if user is not None:
         return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
     # todo exception with not enough params
     uid = uuid.uuid4()
-    create_user(session, fio, address, mail, phone, password, 0, str(uid))
+    create_user(session, fio, address, mail, phone, password, 0, str(uid), telegram, student_id)
     return RedirectResponse(url="/login", status_code=status.HTTP_303_SEE_OTHER)
 
 
 @app.get("/")
 def main_page(request: Request,
               session: Annotated[Session, Depends(db_helper.get_db)]):
-    lis = [{"name": "bow", "price": "10", "photo_id": 1}, {"name": "pan", "price": "100", "photo_id": 2}]
-    return templates.TemplateResponse("main_page.html", {"request": request, "rents": lis})
+    user = check_token(session, request.cookies.get("token"))
+    rents = read_rents(session)
+    flag = 1
+    if user is None:
+        flag = 0
+    return templates.TemplateResponse("main_page.html", {"request": request, "rents": rents, "flag": flag})
 
 
-@app.get("/rent")
+@app.get("/rent/{item_id}")
 def rent_get(request: Request,
-             session: Annotated[Session, Depends(db_helper.get_db)]):
+             session: Annotated[Session, Depends(db_helper.get_db)],
+             item_id: int):
+    user = check_token(session, request.cookies.get("token"))
+    flag = 1
+    if user is None:
+        flag = 0
+    rent = read_rent(session, item_id)
+    photo = read_photo_with_rent_id(session, rent.rent_id)
+    rent_user = read_user(session, rent.user_id)
+    return templates.TemplateResponse("rent_page.html", {"request": request, "rent": rent, "photo": photo, "flag": flag, "user": rent_user})
 
-    return RedirectResponse(url="/main", status_code=status.HTTP_303_SEE_OTHER)
+
+@app.get("/rentcreate")
+def rent_create_get(request: Request,
+                    session: Annotated[Session, Depends(db_helper.get_db)]):
+    user = check_token(session, request.cookies.get("token"))
+    flag = 1
+    if user is None:
+        return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
+    return templates.TemplateResponse("rent_add.html", {"request": request, "flag": flag})
 
 
-@app.post("/rent")
-def rent_post(request: Request,
-              session: Annotated[Session, Depends(db_helper.get_db)]):
+@app.post("/rentcreate")
+async def rent_create_post(request: Request,
+                           session: Annotated[Session, Depends(db_helper.get_db)],
+                           photos: list[UploadFile],
+                           name: str = Form(...), price: str = Form(...),
+                           address: str = Form(...), description: str = Form(...)):
+    user = check_token(session, request.cookies.get("token"))
+    if user is None:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+    r_id = create_rent(session, user.user_id, name, price, description, address)
 
-    return {"Hello": "World"}
+    i = 1
+    for photo in photos:
+        photo_id = create_photo(session, i, r_id)
+        name = str(photo_id) + ".png"
+        dirk = f"static/photo/{name}"
+        with open(dirk, "wb") as f:
+            content = await photo.read()
+            f.write(content)
+    return RedirectResponse(url="/", status_code=status.HTTP_303_SEE_OTHER)
+
+@app.get("/test2")
+def test2(request: Request,
+          session: Annotated[Session, Depends(db_helper.get_db)]):
+    user = check_token(session, request.cookies.get("token"))
+    if user is None:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+    return templates.TemplateResponse("test2.html", {"request": request, "user_id": user.user_id})
+
+
+@app.get("/tes")
+def test2(request: Request,
+          session: Annotated[Session, Depends(db_helper.get_db)]):
+    return templates.TemplateResponse("df.html", {"request": request})

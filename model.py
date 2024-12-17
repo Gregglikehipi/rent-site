@@ -25,7 +25,7 @@ class DatabaseHelper:
                 raise e
 
 
-db_helper = DatabaseHelper(url="sqlite:///reports.db", echo=False)
+db_helper = DatabaseHelper(url="sqlite:///rent_site.db", echo=False)
 
 
 class Category(Base):
@@ -43,9 +43,11 @@ class Users(Base):
     address = mapped_column(Text)
     mail = mapped_column(Text)
     phone_number = mapped_column(Text)
-    password = mapped_column('pass', Text)
+    password = mapped_column(Text)
     rating = mapped_column(Float)
     uuid = mapped_column(Text)
+    telegram = mapped_column(Text)
+    student_id = mapped_column(Text)
 
     rent: Mapped[List['Rent']] = relationship('Rent', uselist=True, back_populates='user')
     chat: Mapped[List['Chat']] = relationship('Chat', uselist=True, back_populates='user')
@@ -59,6 +61,7 @@ class Rent(Base):
     name = mapped_column(Text)
     price = mapped_column(Text)
     description = mapped_column(Text)
+    address = mapped_column(Text)
 
     user: Mapped['Users'] = relationship('Users', back_populates='rent')
     chat: Mapped[List['Chat']] = relationship('Chat', uselist=True, back_populates='rent')

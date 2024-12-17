@@ -3,8 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="static/css/font.css">
+    <link rel="stylesheet" type="text/css" href="static/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="static/css/header.css">
+    <link rel="stylesheet" type="text/css" href="static/css/rent_add.css">
 </head>
 <body>
+    <div class="section-start-top">
+        <div class="section-start-top-brand">
+            <a href="/" class="section-start-top-brand__name">RentSpace</a>
+        </div>
+        <div class="section-start-top-options">
+            <div class="section-start-top-options-pages">
+                <a href="/rentcreate" class="section-start-top-options-pages__text">Создать карточку аренды</a>
+            </div>
+            <div class="section-start-top-options-login">
+                {% if flag == 1 %}
+                  <a href="/logout" class="section-start-top-options-pages__text">Выход</a>
+                  <a href="/user" class="section-start-top-options-login__text">Личный кабинет</a>
+                {% else %}
+                  <a href="/login" class="section-start-top-options-pages__text">Вход</a>
+                  <a href="/register" class="section-start-top-options-pages__text">Регистрация</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="main-section">
+        <h2>Создание аренды</h2>
+    <form action="/rentcreate" method="post" enctype="multipart/form-data">
+        <div>
+            <label><b>Название объявления</b></label>
+            <input type="text" name="name">
 
+            <label><b>Цена</b></label>
+            <input type="text" name="price">
+
+            <label><b>Место для взятия</b></label>
+            <input type="text" name="address">
+
+            <label><b>Описание</b></label>
+            <input type="text" name="description">
+
+            <label>Выберите фотографию</label><br/>
+            <input type="file" name="photos" multiple="multiple"/>
+
+            <button type="submit">Создать карточку</button>
+        </div>
+    </form>
+    </div>>
 </body>
 </html>

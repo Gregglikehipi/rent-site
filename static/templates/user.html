@@ -3,18 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="static/css/font.css">
+    <link rel="stylesheet" type="text/css" href="static/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="static/css/header.css">
+    <link rel="stylesheet" type="text/css" href="static/css/user.css">
 </head>
 <body>
-    <div>
+    <div class="section-start-top">
+        <div  class="section-start-top-brand">
+            <a href="/" class="section-start-top-brand__name">RentSpace</a>
+        </div>
+        <div class="section-start-top-options">
+            <div class="section-start-top-options-pages">
+                <a href="/rentcreate" class="section-start-top-options-pages__text">Создать карточку аренды</a>
+            </div>
+            <div class="section-start-top-options-login">
+                {% if flag == 1 %}
+                  <a href="/logout" class="section-start-top-options-pages__text">Выход</a>
+                  <a href="/user" class="section-start-top-options-login__text">Личный кабинет</a>
+                {% else %}
+                  <a href="/login" class="section-start-top-options-pages__text">Вход</a>
+                  <a href="/register" class="section-start-top-options-pages__text">Регистрация</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <h1>Персональные данные</h1>
         <label><b>ФИО: {{user.fio}}</b></label>
 
-        <label><b>Ваш адрес: {{user.fio}}</b></label>
+        <label><b>Ваш адрес: {{user.address}}</b></label>
 
         <label><b>Номер телефона: {{user.phone_number}}</b></label>
 
         <label><b>Почта: {{user.mail}}</b></label>
 
+        <label><b>Телеграмм: {{user.telegram}}</b></label>
+
         <label><b>Рейтинг: {{user.rating}}</b></label>
+
     </div>
 </body>
 </html>

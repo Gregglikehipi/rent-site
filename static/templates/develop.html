@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="static/css/font.css">
+    <link rel="stylesheet" type="text/css" href="static/css/reset.css">
+    <link rel="stylesheet" type="text/css" href="static/css/header.css">
+    <link rel="stylesheet" type="text/css" href="static/css/photo.css">
+</head>
+<body>
+    <div class="section-start-top">
+        <div class="section-start-top-brand">
+            <span class="section-start-top-brand__name">RentSpace</span>
+        </div>
+        <div class="section-start-top-options">
+            <div class="section-start-top-options-pages">
+                <a href="/rentcreate" class="section-start-top-options-pages__text">Создать карточку аренды</a>
+                <a class="section-start-top-options-pages__text">-</a>
+                <a href="/login" class="section-start-top-options-pages__text">Вход</a>
+                <a href="/logout" class="section-start-top-options-pages__text">Выход</a>
+            </div>
+            <div class="section-start-top-options-login">
+                <a href="/user" class="section-start-top-options-login__text">Личный кабинет</a>
+            </div>
+        </div>
+    </div>
+    <div>
+    <h1>Каталог</h1>
+        <div>
+            {% for rent in rents %}
+            <div>
+                <div class="image-border">
+                    <img src="static/photo/{{ rent.rent_id }}.png" class="image">
+                </div>
+                <b>{{rent.name}}</b>
+                <i>{{rent.price}}</i>
+                <a href="/rent/{{rent.rent_id}}">Посмотреть объявление</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>
